@@ -76,4 +76,28 @@ def create_database(cursor) :
 create_database(cursor)
 for x in TABLES :
    cursor.execute(TABLES[x])
+
+run = True
+while run :
+    print("You're in army now !")
+    print("use help to see commands avaible")
+    entry = input().lower()
+    if entry == "quit" :
+        run = False
+
+    if entry == "add soldier" :
+        print("New soldier information")
+        print("Matricule : ")
+        matricule = input()
+        print("Name : ")
+        nom = input()
+        print("Mail : ")
+        email = input()
+        print("Grade : ")
+        grade = input()
+        try :
+            cursor.execute("INSERT INTO Soldat (matricule, nom, email, grade) VALUES ({}, {}, {}, {})".format(matricule, nom, email, grade))
+        except mysql.connector.Error as err :
+            print("Soldier {} wasn't added, {}".format(nom, err))
+
 mydb.close()
