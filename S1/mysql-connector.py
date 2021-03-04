@@ -99,11 +99,15 @@ while run :
         cr.showSoldier(cursor)
     elif entry == "edit soldier" :
         cr.editSoldier(cursor, mydb)
+    elif entry == "remove soldier" :
+        cr.removeSoldier(cursor, mydb)
     elif entry == "add obstacle" :
         cr.addObstacle(cursor, mydb)
     elif entry == "show obstacle" :
         cr.showObstacle(cursor)
     elif entry == "edit obstacle" :
         cr.editObstacle(cursor, mydb)
+    elif entry == "remove obstacle" :
+        cr.removeObstacle(cursor, mydb)
     
 mydb.close()

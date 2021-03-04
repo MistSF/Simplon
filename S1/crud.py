@@ -117,4 +117,22 @@ def editObstacle(cursor, mydb) :
 
 def removeSoldier(cursor, mydb) :
     showSoldier(cursor, True)
-    print("what soldier")
+    print("what soldier :")
+    target = input()
+    try :
+        request = "DELETE FROM Soldat WHERE nom = '{}'".format(target)
+        mydb.commit()
+        cursor.execute(request)
+    except mysql.connector.Error as err :
+        print(err)
+
+def removeObstacle(cursor, mydb) :
+    showObstacle(cursor, True)
+    print("what obstacle :")
+    target = input()
+    try :
+        request = "DELETE FROM Obstacle WHERE nom = '{}'".format(target)
+        mydb.commit()
+        cursor.execute(request)
+    except mysql.connector.Error as err :
+        print(err)
