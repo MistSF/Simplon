@@ -1,9 +1,11 @@
 import mysql.connector
+import databaseconfig as cfg
+import crud as cr
 
 mydb = mysql.connector.connect(
     host="localhost",
-    user=user,
-    password=password
+    user=cfg.mysql["user"],
+    password=cfg.mysql["passwd"]
 )
 
 db_name = "you_are_in_army_now"
@@ -50,15 +52,12 @@ TABLES['Passage'] = (
     )"""
 )
 
-
-cursor = mydb.cursor()
-
+cursor = mydb.cursor(buffered=True)
 def create_database(cursor) :
     try :
         cursor.execute("CREATE DATABASE {}".format(db_name))
     except mysql.connector.Error as err :
         print("failed to create database {}".format(err))
-        exit(1)
     
     try :
         cursor.execute("USE {}".format(db_name))
@@ -71,33 +70,40 @@ def create_database(cursor) :
             mydb.database = db_name
         else :
             print(err)
-            exit(1)
 
 create_database(cursor)
+
 for x in TABLES :
    cursor.execute(TABLES[x])
+
+try : 
+    cursor.execute("INSERT INTO Difficulte VALUES ('Easy', 0)")
+    cursor.execute("INSERT INTO Difficulte VALUES ('Medium', 2)")
+    cursor.execute("INSERT INTO Difficulte VALUES ('Hard', 5)")
+    mydb.commit()
+except mysql.connector.Error as err : 
+    print(err)
 
 run = True
 while run :
     print("You're in army now !")
-    print("use help to see commands avaible")
+    print("use help to see commands avaible\n")
     entry = input().lower()
     if entry == "quit" :
         run = False
-
-    if entry == "add soldier" :
-        print("New soldier information")
-        print("Matricule : ")
-        matricule = input()
-        print("Name : ")
-        nom = input()
-        print("Mail : ")
-        email = input()
-        print("Grade : ")
-        grade = input()
-        try :
-            cursor.execute("INSERT INTO Soldat (matricule, nom, email, grade) VALUES ({}, {}, {}, {})".format(matricule, nom, email, grade))
-        except mysql.connector.Error as err :
-            print("Soldier {} wasn't added, {}".format(nom, err))
-
+    elif entry == "help" :
+        print("add soldier, add obstacle, show soldier, show obstacle, edit soldier, edit obstacle")
+    elif entry == "add soldier" :
+        cr.addSoldier(cursor, mydb)
+    elif entry == "show soldier" :
+        cr.showSoldier(cursor)
+    elif entry == "edit soldier" :
+        cr.editSoldier(cursor, mydb)
+    elif entry == "add obstacle" :
+        cr.addObstacle(cursor, mydb)
+    elif entry == "show obstacle" :
+        cr.showObstacle(cursor)
+    elif entry == "edit obstacle" :
+        cr.editObstacle(cursor, mydb)
+    
 mydb.close()
